@@ -35,8 +35,8 @@ enum Select: Int {
 
 func printAnswers(_ answers: [Select]) {
     var str = ""
-    for item in answers {
-        str += item.description
+    for index in 1...10 {
+        str += answers[index].description
     }
     print(str)
 }
@@ -46,9 +46,6 @@ func printAnswers(_ answers: [Select]) {
 // MARK: Logic Test
 
 func isTrueAnswers(_ answers: [Select]) -> Bool {
-    var answers = answers
-    // 方便从1开始
-    answers.insert(Select.None, at: 0)
     // 题1 不用管
     // 题2
     if (answers[2] == .A && answers[5] != .C) ||
@@ -169,21 +166,22 @@ func isTrueAnswers(_ answers: [Select]) -> Bool {
 
 let selectArray: [Select] = [.A, .B, .C, .D]
 
-var answers: [Select] = []
+// 方便从1开始
+var answers: [Select] = [.None]
 var trueAnswersCount = 0
-func getAnswer(for index: Int = 0) {
-    if index >= 10 {// 0...9
+func getAnswer() {
+    if answers.count <= 10 {// 1...10位，0位不使用
+        for answer in selectArray {
+            answers.append(answer)
+            getAnswer()
+            answers.removeLast()
+        }
+    } else {
         // 判断答案
         if isTrueAnswers(answers) {
             trueAnswersCount += 1
             printAnswers(answers)
         }
-        return
-    }
-    for answer in selectArray {
-        answers.append(answer)
-        getAnswer(for: (index + 1))
-        answers.removeLast()
     }
 }
 
